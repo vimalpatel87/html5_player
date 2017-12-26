@@ -7,10 +7,19 @@ videoApp.controller('VideoController',['$scope','$window','$interval', function(
     $scope.videoPlaying = false;
     $scope.currentTime;
     $scope.totalTime;
+    $scope.scrubTop = -1000;
+    $scope.scrubLeft = -1000;
+    $scope.vidHeightCenter = -1000;
+    $scope.vidWidthCenter = -1000;
     
     $interval(function(){
-        $scope.updateLayout();
-    }, 100)
+    var t = $scope.videoDisplay.currentTime;
+    var d = $scope.videoDisplay.duration;
+    var w = t / d * 100;
+    var p = document.getElementById('progressMeterFull').offsetLeft + document.getElementById('progressMeterFull').offsetWidth;
+    $scope.scrubLeft = (t / d * p) - 7;
+    $scope.updateLayout();
+},100);
     
     $scope.initPlayer = function() {
         $scope.currentTime = 0;
@@ -37,10 +46,13 @@ videoApp.controller('VideoController',['$scope','$window','$interval', function(
     }
 
     $scope.updateLayout = function() {
-        if(!$scope.$$phase) {
-            $scope.$apply();
-        }
+    $scope.scrubTop = document.getElementById('progressMeterFull').offsetTop-2;
+    $scope.vidHeightCenter =  $scope.videoDisplay.offsetHeight/2 - 50;
+    $scope.vidWidthCenter = $scope.videoDisplay.offsetWidth/2 - 50;
+    if(!$scope.$$phase) {
+        $scope.$apply();
     }
+}
 
 
 
